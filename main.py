@@ -10,7 +10,7 @@ def main():
         print("2. View Books")
         print("3. Place Order")
         print("4. View Orders")
-        print("5. Delete Order")  # New option
+        print("5. Delete Order")  
         print("6. Exit")
         
         choice = input("Enter your choice: ")
