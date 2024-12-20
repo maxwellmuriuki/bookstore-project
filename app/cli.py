@@ -86,3 +86,91 @@ def delete_order():
         print("\nInvalid input. Please enter a valid order ID.")
     except Exception as e:
         print(f"\nAn error occurred: {e}")
+
+def update_book():
+    try:
+        book_id = int(input("Enter the ID of the book to update: ").strip())
+        book = session.query(Book).get(book_id)
+
+        if book:
+            print(f"Updating Book: {book.title} by {book.author}")
+            new_title = input("Enter new title (leave blank to keep current): ").strip()
+            new_author = input("Enter new author (leave blank to keep current): ").strip()
+            new_genre = input("Enter new genre (leave blank to keep current): ").strip()
+            new_price = input("Enter new price (leave blank to keep current): ").strip()
+            new_stock = input("Enter new stock (leave blank to keep current): ").strip()
+
+            if new_title:
+                book.title = new_title
+            if new_author:
+                book.author = new_author
+            if new_genre:
+                book.genre = new_genre
+            if new_price:
+                book.price = float(new_price)
+            if new_stock:
+                book.stock = int(new_stock)
+
+            session.commit()
+            print("Book updated successfully!")
+        else:
+            print("Book not found.")
+    except ValueError:
+        print("Invalid input. Please try again.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def update_customer():
+    try:
+        customer_id = int(input("Enter the ID of the customer to update: ").strip())
+        customer = session.query(Customer).get(customer_id)
+
+        if customer:
+            print(f"Updating Customer: {customer.name}")
+            new_name = input("Enter new name (leave blank to keep current): ").strip()
+            new_contact = input("Enter new contact (leave blank to keep current): ").strip()
+
+            if new_name:
+                customer.name = new_name
+            if new_contact:
+                customer.contact = new_contact
+
+            session.commit()
+            print("Customer updated successfully!")
+        else:
+            print("Customer not found.")
+    except ValueError:
+        print("Invalid input. Please try again.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+def update_order():
+    try:
+        order_id = int(input("Enter the ID of the order to update: ").strip())
+        order = session.query(Order).get(order_id)
+
+        if order:
+            print(f"Updating Order ID: {order.id} (Book: {order.book.title}, Customer: {order.customer.name})")
+            
+            new_book_id = input("Enter new book ID (leave blank to keep current): ").strip()
+            if new_book_id:
+                new_book = session.query(Book).get(int(new_book_id))
+                if new_book:
+                    order.book.stock += 1  # Revert stock for current book
+                    order.book = new_book
+                    new_book.stock -= 1
+
+            new_customer_id = input("Enter new customer ID (leave blank to keep current): ").strip()
+            if new_customer_id:
+                new_customer = session.query(Customer).get(int(new_customer_id))
+                if new_customer:
+                    order.customer = new_customer
+
+            session.commit()
+            print("Order updated successfully!")
+        else:
+            print("Order not found.")
+    except ValueError:
+        print("Invalid input. Please try again.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
